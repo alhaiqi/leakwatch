@@ -56,4 +56,4 @@ def test_strict_filter_still_catches_real_placeholders():
 def test_strict_your_placeholder_shapes():
     for v in ["sk-proj-your-key-goes-here-1234567890", "ghp_your_token_here_aaaaaaaaaaaaaaaaaaa", "your-api-key"]:
         assert placeholder_reason(v, strict=True) == "placeholder-word:your", v
-    assert placeholder_reason("sk-proj-YOUR_keyAbcdefgh", strict=True) is None  # random-looking
+    assert placeholder_reason(fakes._p("sk-", "proj-") + "YOUR_" + "keyAbcdefgh", strict=True) is None  # random-looking

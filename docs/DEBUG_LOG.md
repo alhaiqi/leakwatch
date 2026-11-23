@@ -56,3 +56,7 @@
 - Self-correction: my first version of that test contained AWS's published example key as a literal, which breaks the safety rules. I replaced it with a runtime-built value before committing.
 - **Second pass:** the new regression test still failed sometimes. Fuzzing 7×100k found `getenv` (case-insensitive) inside a random anthropic key and `your_` inside an `sk-proj-` key. In strict mode, env lookups now need real syntax (`getenv(`, `os.environ`…; tokens can't contain `(` or `.`) and `your` must be followed by a lowercase word (`your-key`). **Result: 0 drops in 1.05M random keys**, and `sk-proj-your-key-goes-here…` is still caught.
 - Stability after all fixes: **0/100** full-suite failures (148 tests per run); fuzz: 0 strict-filter drops in 2.1M random keys.
+
+## #11 — Broken gate: `grep CLEAN` matched "NOT CLEAN"
+- My gate chain `self-scan | tail -1 | grep CLEAN` passed on `… -> NOT CLEAN`, so a commit landed with a secret-shaped test literal (`sk-proj-YOUR_key…`, a made-up OpenAI-format string). `publish.py`'s own guard refused to push it, so it never reached the public repo.
+- Fix: the literal is built at runtime, and gates now use `leakwatch self-scan` **exit code** (1 when anything is found). The earlier gates (Phases 4–7) printed `CLEAN` in their output, so they weren't affected.
