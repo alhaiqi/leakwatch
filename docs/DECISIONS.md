@@ -38,3 +38,11 @@
 ## ADR-0007 — Orchestration lives in `reporter.py` (2026-11-23)
 **Context:** The prompt fixes the folder layout. `Pipeline.process_commit` (fetch → scan → triage → decide → issue) needs a home.
 **Decision:** `reporter.py`, rather than adding a module outside the layout. Rotation steps: the LLM's steps when it returns 2–8 valid ones, otherwise the curated per-type steps.
+
+## ADR-0008 — Sleep/wake: what is proven and what is not (2026-11-23)
+**Context:** Gate 5 asks that the server survive a Sprite sleep/wake cycle.
+**What the docs say:** `services.md` says a running service keeps the Sprite from pausing; `llm.txt` says Sprites pause when they aren't serving HTTP or producing session output, and services restart at boot.
+**Proven here:** crash → auto-restart (kill -9, back in under 5 s); `services restart` is clean; the public URL reaches the service; the service is registered, so per the docs it restarts at boot.
+**Not observable from inside this session:** a real pause. This Claude Code console session is attached and producing output, so the Sprite can't pause while I work, and a checkpoint restore (which restarts the environment) would kill this session.
+**Decision:** Keep the always-on service (ADR-0003). The heartbeat log (`data/heartbeat.log`, summarized by `leakwatch doctor`) gives post-hoc evidence of any pause (a wall-clock gap with the same PID) or reboot (a new boot_id). `scripts/sleepwake_check.sh` is a human step: after the console is closed and the Sprite has been idle, push a commit and confirm the issue appears; doctor then shows the gap/reboot counts.
+**Consequences:** The DoD item "survives a sleep/wake cycle" is marked **partially verified** until that check runs. That's stated in the final summary, not glossed over.

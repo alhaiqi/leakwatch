@@ -33,3 +33,10 @@ def test_scrub_masks_unknown_high_entropy_tokens():
 def test_scrub_leaves_normal_code_alone():
     s = 'def connect(host="localhost", port=5432):  # retry 3 times'
     assert scrub(s) == s
+
+
+def test_scrub_keeps_delivery_guids_and_refs_but_not_secrets_inside_refs():
+    s = "queued from refs/heads/leakwatch-e2e-aws-1795463535 (delivery 630d1e2a-c8b1-11f0-9a3f-1e2b3c4d5e6f)"
+    assert scrub(s) == s
+    k = fakes.aws_key()
+    assert k not in scrub(f"refs/heads/{k}")

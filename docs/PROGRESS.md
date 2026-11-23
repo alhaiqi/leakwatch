@@ -6,3 +6,4 @@
 - 19:43Z Phase 2 done: 107 offline tests green, scanner coverage 98%, 0/30 flaky runs, 0 false positives on the placeholder fixtures.
 - 19:48Z Phase 3 done: issue #1 opened masked, re-run deduped; 129 offline tests green; self-scan clean.
 - 19:50Z Phase 4 done: live triage OK (placeholder 0.98, real 0.9), forced-failure fallback opened issue #2. 130 offline + 5 live tests green.
+- 19:53Z Phase 5 done: service 'leakwatch' live on :8080, one hook, 401 on bad sig, push→issue in ~12 s, crash-restart proven. Sleep/wake only partially verified (ADR-0008).

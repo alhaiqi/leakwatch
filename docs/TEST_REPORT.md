@@ -14,3 +14,12 @@
   - only `:free` models listed; GitHub gateway smoke OK; a forced-bad model raises `LLMUnavailable`
 - Triage JSON validation: 11 offline tests (valid, fenced, think-then-answer, 9 malformed shapes, retry-once, double-malformed → rules, unavailable → rules, LLM output scrubbed).
 - **Forced failure, live:** `LEAKWATCH_LLM_FORCE_MODELS=leakwatch/does-not-exist:free leakwatch scan-commit … 0861a151da906990bf438c1271ded6cd007ea06e`: OpenRouter returned `HTTP 400` → rules-only → the 0.95-confidence Stripe key was still reported at https://github.com/alhaiqi/leakwatch-playground/issues/2
+
+## Phase 5 gate: webhook + service (2026-11-23T19:53:57Z)
+- `register-webhook` run twice: `created hook 715896002`, then `updated hook 715896002`. Doctor reports `1 hook(s)`, i.e. exactly one.
+- Bad signature on the public URL: `POST /github/webhook` with `sha256=deadbeef` → **401**.
+- GitHub's hook-creation ping → **200** (the signature verified with the stored secret).
+- **Real push → automatic issue:** commit `b6246cdf427fd3b77276ffe83521bd771665f9f8` pushed at 19:52:18Z on `leakwatch-e2e-aws-1795463535`; webhook `202 Accepted` at 19:52:17.996Z (the contents API commit and the delivery arrived together); LLM verdict `real (llm:baidu/ernie-5.5-flash-preview:free)`; issue visible through the API at 19:52:31Z (about 12 s).
+- Crash recovery of the real service: `kill -9 3698` → restarted with pid 3709 within 5 s; `/healthz` 200; state `running`, restart_count 1. The heartbeat log recorded both restarts.
+- `leakwatch doctor --deep`: **12/12 green**.
+- 144 offline tests green. (One upstream `StarletteDeprecationWarning` about httpx in TestClient; harmless.)

@@ -8,6 +8,8 @@ from .patterns import match_generic, match_known
 
 ELLIPSIS = "…"
 HIGH_ENTROPY_TOKEN = re.compile(r"[A-Za-z0-9+/_=-]{20,}")
+# Not secrets, and needed for debugging: GitHub delivery GUIDs and git refs.
+BENIGN = re.compile(r"^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|refs/(?:heads|tags)/[\w./-]+)$")
 
 
 def mask(value: str) -> str:
@@ -42,6 +44,8 @@ def scrub(text: str) -> str:
                 spans.append(h.span)
         for m in HIGH_ENTROPY_TOKEN.finditer(line):
             tok = m.group(0)
+            if BENIGN.match(tok):
+                continue
             if re.search(r"\d", tok) and re.search(r"[A-Za-z]", tok) and shannon(tok) >= 3.5:
                 spans.append(m.span())
         out_lines.append(_replace_spans(line, spans) if spans else line)
