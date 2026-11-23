@@ -6,6 +6,6 @@
 - [x] 3 GitHub integration (scan-commit opens a masked issue, no duplicate)
 - [x] 4 LLM triage (JSON validated, placeholder → non-real, fallback)
 - [x] 5 Webhook + service (register-webhook, 401, push → issue, survives restart)
-- [ ] 6 Live e2e ×3
+- [x] 6 Live e2e ×3
 - [ ] 7 Docs + manual test + demo
 - [ ] 8 Final validation + publish

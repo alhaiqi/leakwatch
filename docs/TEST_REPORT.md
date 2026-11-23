@@ -23,3 +23,18 @@
 - Crash recovery of the real service: `kill -9 3698` → restarted with pid 3709 within 5 s; `/healthz` 200; state `running`, restart_count 1. The heartbeat log recorded both restarts.
 - `leakwatch doctor --deep`: **12/12 green**.
 - 144 offline tests green. (One upstream `StarletteDeprecationWarning` about httpx in TestClient; harmless.)
+
+## Phase 6 gate: live e2e (`scripts/e2e.sh`)
+
+Each run: unique branch `leakwatch-e2e-<ts>` created via the API; commits go through the real GitHub webhook → Sprite service → connectors path. Issue set taken from the server DB, content checked with `GET /issues/{n}`.
+
+| Run | Result | Positive (2 issues, masked, lines 4,5) | Negative | Dedupe | Robustness (401 / non-push ignored) | Issues opened, then closed by cleanup |
+|---|---|---|---|---|---|---|
+| 20261123-195449 | ❌ FAIL: expected exactly 2 issues, got 1 | — | — | — | — | #4 |
+| 20261123-195545 | ✅ PASS | ✅ 20.0s | ✅ | ✅ findings=1 issues=0 dup=1 skipped_by_policy=0 | ✅ 401 / ignored | #6, #7 |
+| 20261123-195636 | ✅ PASS | ✅ 26.8s | ✅ | ✅ findings=1 issues=0 dup=1 skipped_by_policy=0 | ✅ 401 / ignored | #8, #9 |
+| 20261123-195723 | ✅ PASS | ✅ 12.3s | ✅ | ✅ findings=1 issues=0 dup=1 skipped_by_policy=0 | ✅ 401 / ignored | #10, #11 |
+| 20261123-195751 | ✅ PASS | ✅ 18.9s | ✅ | ✅ findings=1 issues=0 dup=1 skipped_by_policy=0 | ✅ 401 / ignored | #12, #13 |
+
+- Run 195449 failed because of a racy test oracle (GitHub's list-issues lag, DEBUG_LOG #7), not because of LeakWatch. After the oracle fix, runs **195545, 195636, 195723 and 195751 passed**, and the last three were run back to back as the gate. **3 consecutive passes ✅**
+- Raw results: `data/e2e-results/*.json` (gitignored, local to the Sprite).

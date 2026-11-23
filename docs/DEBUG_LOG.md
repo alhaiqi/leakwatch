@@ -31,3 +31,8 @@
 - (a) `spikes/phase3_seed.py`: `STRIPE_SECRET_KEY = "{fakes.stripe_live()}"` inside an f-string. The filter knew `{{…}}` but not single-brace interpolation. Added `{identifier…}` to the template markers (with a regression test).
 - (b) `tests/unit/test_reporter.py`: I had typed a secret-shaped password literal into a test, against the "no secret-shaped literals" rule. Replaced it with `fakes.generic_password()`.
 - **Lesson:** gate commits are now `pytest && self-scan && git commit`. milestone-4-green was re-tagged on the clean commit.
+
+## #7 — e2e run 1: "expected exactly 2 issues, got 1" (Phase 6)
+- **Observed:** the service log shows *both* findings reported (`AKIA…` at 19:55:09, `database_url` at 19:55:14). The e2e listed issues at 19:55:17 and saw one.
+- **Hypothesis:** GitHub's `GET /repos/{o}/{r}/issues?labels=` list is eventually consistent and lags new issues by seconds.
+- **Fix:** the e2e takes the issue set from the server's own DB (`fingerprints.issue_url` for the commit SHA; `processed` is written only after all issues exist), then fetches each with `GET /issues/{n}`, which is consistent. LeakWatch itself was correct; the test's oracle was racy. No assertion was weakened.

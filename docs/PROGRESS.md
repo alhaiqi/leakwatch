@@ -7,3 +7,4 @@
 - 19:48Z Phase 3 done: issue #1 opened masked, re-run deduped; 129 offline tests green; self-scan clean.
 - 19:50Z Phase 4 done: live triage OK (placeholder 0.98, real 0.9), forced-failure fallback opened issue #2. 130 offline + 5 live tests green.
 - 19:53Z Phase 5 done: service 'leakwatch' live on :8080, one hook, 401 on bad sig, push→issue in ~12 s, crash-restart proven. Sleep/wake only partially verified (ADR-0008).
+- 19:58Z Phase 6 done: e2e passed 3× consecutively (plus one more pass before; one racy-oracle failure fixed, DEBUG_LOG #7).
