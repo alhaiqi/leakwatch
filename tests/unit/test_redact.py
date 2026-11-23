@@ -26,8 +26,19 @@ def test_scrub_masks_every_known_and_generic_secret():
 
 
 def test_scrub_masks_unknown_high_entropy_tokens():
-    tok = fakes._rand(fakes.ALNUM, 32)
-    assert tok not in scrub(f"header X-Weird: {tok}")
+    for _ in range(500):  # deterministic enough: covers letters-only draws (~0.4% of ALNUM draws)
+        tok = fakes._rand(fakes.ALNUM, 32)
+        assert tok not in scrub(f"header X-Weird: {tok}")
+    letters = fakes._rand(fakes.string.ascii_letters, 32)
+    assert letters not in scrub(f"x: {letters}")
+    dashed = fakes._rand(fakes.ALNUM, 12) + "-" + fakes._rand(fakes.ALNUM, 14)
+    assert dashed not in scrub(f"x: {dashed}")
+
+
+def test_scrub_keeps_wordy_identifiers():
+    for s in ["retries = MAX_CONNECTION_RETRIES_BEFORE_FAILURE",
+              'AUTH_BACKEND = "django.contrib.auth.backends.ModelBackend"']:
+        assert scrub(s) == s
 
 
 def test_scrub_leaves_normal_code_alone():

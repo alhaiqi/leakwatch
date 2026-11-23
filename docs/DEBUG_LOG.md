@@ -36,3 +36,23 @@
 - **Observed:** the service log shows *both* findings reported (`AKIA…` at 19:55:09, `database_url` at 19:55:14). The e2e listed issues at 19:55:17 and saw one.
 - **Hypothesis:** GitHub's `GET /repos/{o}/{r}/issues?labels=` list is eventually consistent and lags new issues by seconds.
 - **Fix:** the e2e takes the issue set from the server's own DB (`fingerprints.issue_url` for the commit SHA; `processed` is written only after all issues exist), then fetches each with `GET /issues/{n}`, which is consistent. LeakWatch itself was correct; the test's oracle was racy. No assertion was weakened.
+
+## #8 — Flaky tests found by the fresh-clone check (Phase 8)
+- **Observed:** in `/tmp/lw-fresh`, 1 of the first runs failed; 40 reruns gave 2 failures (`test_all_true_positives_detected`, `test_random_vs_word`). The 30× check in Phase 2 had seen 0, consistent with a ~1% rate.
+- **Hypothesis:** `fakes.generic_password()` (18 chars) sometimes has entropy < 3.5 because of repeated characters, so the detector correctly drops it.
+- **Experiment:** 100k samples: P(entropy < 3.5) = **0.64%** at 18 chars, 0.002% at 24, 0.0000% at 28.
+- **Fix:** the fake generic password is 28 chars. The 3.5 threshold is unchanged (it's in the spec). Not a weakened test: the fixture now represents a secret that the spec says must be caught.
+- **Product consequence:** documented in README Limitations: short random passwords can fall under the threshold.
+
+## #9 — A secret-shaped (made-up) literal lives in published history
+- The first Phase 4 commit (local `7ea83ae`, public `a1766f1`) contains the test password literal from #6, fixed in the next commit. It's a random string I invented for a unit test, not a credential for anything. Removing it from public history would need a force-push, which the safety rules forbid. HEAD scans clean (`publish.py` enforces that).
+- **Follow-up (same hunt):** after the 28-char fix there was still about 1 failure in 100–150 suites. Captured: `test_scrub_masks_unknown_high_entropy_tokens`. `scrub()` required digits+letters, so a random 32-char token with no digits (~0.36% of draws) went unmasked. **That was a product gap**, since letters-only random keys exist. `scrub()` now masks any token of 24+ chars with entropy ≥ 3.5 unless it's a plain-word snake/kebab/dotted identifier. Its generic rule also skips dotted identifiers and paths, matching the detector. Cost: long camelCase identifiers get masked in log/LLM context.
+- Then 0/200 failures. One more suspected source, a timing race: `test_healthz_and_heartbeat` asserted the heartbeat file existed before the scheduled task had necessarily run. Now it waits up to 2 s.
+
+## #10 — Strict placeholder filter dropped ~1 in 20k random known-format keys (Phase 8)
+- **Found by:** 1/200 failure of `test_prompt_never_contains_raw_secret` (no finding at all). Fuzzing the test logic 50k times reproduced it once; fuzzing `placeholder_reason(strict=True)` over 5×100k fakes showed `mask-chars` (`x{4,}` case-insensitive, 3–6 hits per 100k) and 5-letter words (`fixme`, `dummy`).
+- **This was a real false negative:** a real key with `XXXX` or `DUMMY` in its random part would have been silently dropped.
+- **Fix:** for known formats, mask runs must be ≥8 (≥12 for zeros) and only placeholder words of 7+ letters count. Regression tests: 7 formats × 5000 random keys must all pass; obvious placeholders (`AKIA` + 16 X, `ghp_` + 36 x, `…EXAMPLE…`, `REDACTED`, `****`, all-zero) must still be caught.
+- Self-correction: my first version of that test contained AWS's published example key as a literal, which breaks the safety rules. I replaced it with a runtime-built value before committing.
+- **Second pass:** the new regression test still failed sometimes. Fuzzing 7×100k found `getenv` (case-insensitive) inside a random anthropic key and `your_` inside an `sk-proj-` key. In strict mode, env lookups now need real syntax (`getenv(`, `os.environ`…; tokens can't contain `(` or `.`) and `your` must be followed by a lowercase word (`your-key`). **Result: 0 drops in 1.05M random keys**, and `sk-proj-your-key-goes-here…` is still caught.
+- Stability after all fixes: **0/100** full-suite failures (148 tests per run); fuzz: 0 strict-filter drops in 2.1M random keys.

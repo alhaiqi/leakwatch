@@ -94,7 +94,7 @@ def generic_password() -> str:
     # word (e.g. "here"): such a value would be filtered by design and make tests flaky.
     from leakwatch.scanner.filters import placeholder_reason
     while True:
-        v = _rand(ALNUM, 14) + "!" + _rand(string.digits, 3)
+        v = _rand(ALNUM, 24) + "!" + _rand(string.digits, 3)  # 28 chars: see DEBUG_LOG #8
         if placeholder_reason(v) is None:
             return v
 

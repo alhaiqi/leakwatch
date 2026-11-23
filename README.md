@@ -64,7 +64,7 @@ scripts/demo_seed.py leak|placeholder|duplicate|cleanup --wait 90
 
 ## Testing
 
-- `pytest`: **144 offline tests**, 98% coverage of `scanner/`, zero false positives on the placeholder fixtures. Fake secrets are generated at runtime by `tests/fakes.py`; fixtures hold only `{{FAKE_*}}` tokens.
+- `pytest`: **147 offline tests**, 98% coverage of `scanner/`, zero false positives on the placeholder fixtures. Fake secrets are generated at runtime by `tests/fakes.py`; fixtures hold only `{{FAKE_*}}` tokens.
 - `pytest -m live`: gateway, LLM triage and forced-failure tests against the real connectors.
 - `scripts/e2e.sh`: positive, negative, dedupe and robustness through the real webhook. It passed 3× in a row; see [docs/TEST_REPORT.md](docs/TEST_REPORT.md).
 
@@ -73,6 +73,7 @@ scripts/demo_seed.py leak|placeholder|duplicate|cleanup --wait 90
 - Scans new pushes only: no history scanning, no automatic rotation, one user.
 - The commits API caps a diff at 300 files; files without a `patch` (binary or huge) are skipped.
 - A real secret that contains placeholder-looking words (`example`, `your`, …) can be filtered out. Generic hits need the LLM to say `real`; in rules-only mode only known formats are reported.
+- The generic rule needs Shannon entropy ≥ 3.5. A short random password (around 18 characters) falls below that about 0.6% of the time because of repeated characters, and is then missed (measured, DEBUG_LOG #8).
 - Free LLMs are rate-limited and sometimes wrong. A low-confidence "placeholder" verdict can't suppress a known-format hit.
 - Always-on service: per the Sprite docs a running service keeps the Sprite awake. That trades cost for reliability (see `docs/DECISIONS.md`, ADR-0003 and ADR-0008).
 - Deleting `data/` resets dedupe, so old secrets get re-reported.

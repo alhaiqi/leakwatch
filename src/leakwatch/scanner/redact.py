@@ -4,12 +4,22 @@ from __future__ import annotations
 import re
 
 from .entropy import shannon
+from .filters import DOTTED_IDENT, PATHLIKE
 from .patterns import match_generic, match_known
 
 ELLIPSIS = "…"
 HIGH_ENTROPY_TOKEN = re.compile(r"[A-Za-z0-9+/_=-]{20,}")
 # Not secrets, and needed for debugging: GitHub delivery GUIDs and git refs.
 BENIGN = re.compile(r"^(?:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|refs/(?:heads|tags)/[\w./-]+)$")
+
+
+WORD_SEGMENT = re.compile(r"^(?:[a-z]+|[A-Z][a-z]+|[A-Z]+|\d{1,4})$")
+
+
+def _wordy_identifier(tok: str) -> bool:
+    """snake_case / kebab / dotted identifiers made of plain words, e.g. MAX_CONNECTION_RETRIES."""
+    segs = [s for s in re.split(r"[_.-]", tok) if s]
+    return len(segs) >= 2 and all(WORD_SEGMENT.match(s) for s in segs)
 
 
 def mask(value: str) -> str:
@@ -39,14 +49,18 @@ def scrub(text: str) -> str:
     for line in text.split("\n"):
         spans = [h.span for h in match_known(line) if h.rule.kind != "pem"]
         for h in match_generic(line):
+            if DOTTED_IDENT.match(h.value) or PATHLIKE.search(h.value):
+                continue
             if len(h.value) > 8 and shannon(h.value) >= 3.0 and not any(
                     h.span[0] < e and s < h.span[1] for s, e in spans):
                 spans.append(h.span)
         for m in HIGH_ENTROPY_TOKEN.finditer(line):
             tok = m.group(0)
-            if BENIGN.match(tok):
+            if BENIGN.match(tok) or _wordy_identifier(tok) or shannon(tok) < 3.5:
                 continue
-            if re.search(r"\d", tok) and re.search(r"[A-Za-z]", tok) and shannon(tok) >= 3.5:
+            # digits+letters (≥20) or any long token (≥24): random keys are often letters-only.
+            # Long camelCase identifiers get masked too — acceptable over-masking (DEBUG_LOG #8).
+            if (re.search(r"\d", tok) and re.search(r"[A-Za-z]", tok)) or len(tok) >= 24:
                 spans.append(m.span())
         out_lines.append(_replace_spans(line, spans) if spans else line)
     return "\n".join(out_lines)

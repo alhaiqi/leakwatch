@@ -118,4 +118,7 @@ def test_oversize_413(client):
 def test_healthz_and_heartbeat(client, tmp_path):
     r = client.get("/healthz")
     assert r.status_code == 200 and r.json()["status"] == "ok"
+    end = time.time() + 2  # the heartbeat task is scheduled, not guaranteed to have run yet
+    while time.time() < end and not (tmp_path / "heartbeat.log").exists():
+        time.sleep(0.02)
     assert (tmp_path / "heartbeat.log").exists()

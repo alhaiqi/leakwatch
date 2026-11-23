@@ -12,6 +12,9 @@ STRUCTURAL = [
     (re.compile(r"x{4,}|\*{4,}|#{4,}|\.{4,}", re.I), "mask-chars"),
     (re.compile(r"^(.)\1{5,}$"), "repeated-char"),
 ]
+STRICT_ENV = re.compile(r"os\.environ|getenv\(|process\.env|ENV\[|import\.meta\.env")
+STRICT_YOUR = re.compile(r"your[-_](?:api[-_]|access[-_]|secret[-_])?(?:key|token|secret|password|pat)(?![A-Za-z0-9])")
+STRICT_MASK_RUN = re.compile(r"x{8,}|\*{8,}|#{8,}|\.{8,}|0{12,}", re.I)
 # Long words: safe to apply even to random-looking known-format tokens (chance hit ~1e-6).
 LONG_WORDS = ["example", "dummy", "sample", "placeholder", "changeme", "change_me", "replace",
               "redacted", "insert", "fixme", "notreal", "your_", "your-", "yourkey"]
@@ -25,9 +28,19 @@ def placeholder_reason(value: str, line: str = "", strict: bool = False) -> str 
     """Return why `value` looks like a placeholder, or None. `strict` = known-format token."""
     low = value.lower()
     for rx, why in STRUCTURAL:
+        if strict and why in ("mask-chars", "env-lookup"):
+            continue  # short x/*/# runs and "getenv" occur by chance in random tokens (DEBUG_LOG #10)
         if rx.search(value):
             return why
+    if strict and STRICT_MASK_RUN.search(value):
+        return "mask-chars"
+    if strict and STRICT_ENV.search(value):
+        return "env-lookup"
+    if strict and STRICT_YOUR.search(value):
+        return "placeholder-word:your"
     for w in LONG_WORDS:
+        if strict and len(w.strip("_-")) < 7:
+            continue  # 5–6 letter words (dummy, fixme) appear by chance in random keys
         if w in low:
             return f"placeholder-word:{w.strip('_-')}"
     if not strict:
