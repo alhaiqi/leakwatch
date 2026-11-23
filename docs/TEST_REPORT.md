@@ -69,3 +69,8 @@ Each run: unique branch `leakwatch-e2e-<ts>` created via the API; commits go thr
 | All docs exist and are current; PROGRESS has the final entry | ✅ | README, CLAUDE.md, docs/{PREFLIGHT, PLAN, PROGRESS, ARCHITECTURE, DECISIONS (8 ADRs), DEBUG_LOG (11 entries), TEST_REPORT, MANUAL_TEST, DEMO_SCRIPT, SUBMISSION}, references/ |
 | Pushed to the public submission repo | ✅ | https://github.com/alhaiqi/leakwatch (full history replayed via the Git Data API through the connector, fast-forward only, milestone tags) |
 | Final message with human steps | ✅ | See BLOCKED.md and the final summary |
+
+## README setup re-verification (2026-11-23T21:51:40Z)
+- Step 2: the command forms come from the CLI's own help (`docs/references/sprite-cli-url-auth.md`). `sprite config update --url-auth public -s <name>` is current; `sprite url update --auth public -s <name>` is deprecated (the CLI prints the deprecation) and is the one the user ran successfully. Inside the Sprite the CLI is not logged in, so the README says to run it where `sprite login` was done.
+- Steps 3 and 5 run **verbatim** in a scratch `HOME`: clone, venv, `pip install -e '.[dev]'`, `sed` → `repos = ["OWNER/REPO"]` ✅; `doctor` 11/11 ✅ (with the real allowlist); `pytest` 148 passed ✅.
+- Step 4: the binary at `$HOME/leakwatch/.venv/bin/leakwatch` exists after step 3, and the command matches the live service definition (`/home/sprite/leakwatch/.venv/bin/leakwatch serve`, dir `/home/sprite/leakwatch`, http_port 8080). It wasn't re-created, because only one service can own the HTTP port.

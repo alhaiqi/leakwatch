@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "leakwatch"
 version = "0.1.0"
-description = "Personal secret-leak watcher for GitHub pushes, running on a Fly.io Sprite"
+description = "A personal security agent you own: watches your private repos for leaked keys, runs on your own Sprite, holds zero credentials"
 requires-python = ">=3.11"
 dependencies = ["httpx>=0.27", "starlette>=0.37", "uvicorn>=0.29"]
 

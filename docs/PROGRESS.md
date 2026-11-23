@@ -10,3 +10,4 @@
 - 19:58Z Phase 6 done: e2e passed 3× consecutively (plus one more pass before; one racy-oracle failure fixed, DEBUG_LOG #7).
 - 20:02Z Phase 7 done: README, ARCHITECTURE, MANUAL_TEST (executed, 7/7 ✅), DEMO_SCRIPT, SUBMISSION, CLAUDE.md, references.
 - 20:56Z **Final.** Phase 8 done: fresh clone from GitHub green (148 tests, 98% coverage, doctor 11/11); e2e 3× on final code; published to https://github.com/alhaiqi/leakwatch. DoD: all ✅ except sleep/wake, which is partially verified (human step in BLOCKED.md). Checkpoints v10 (final fixes) and v11 (milestone-8-green).
+- 21:51Z Repositioned docs (ADR-0009): removed the false 'no free protection for private repos' claim, added the comparison and What's next, fixed README setup steps 2–4 (verified verbatim).
