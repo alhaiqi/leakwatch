@@ -21,7 +21,7 @@ def test_decide_policy():
     assert decide(f, Triage("placeholder", .4, "x", source="llm:m"), CFG).report   # low-conf LLM can't suppress
     t, _ = _f("tests/a.py")
     assert not decide(t, Triage("unsure", .5, "x"), CFG).report        # 0.54 < 0.8
-    g = scan_patch("a.js", "@@ -0,0 +1 @@\n+const password = 'Qm9x2LkPz81vRt!7'\n").findings[0]
+    g = scan_patch("a.js", f"@@ -0,0 +1 @@\n+const password = '{fakes.generic_password()}'\n").findings[0]
     assert not decide(g, Triage("placeholder", .3, "x", source="llm:m"), CFG).report  # generic: LLM decides
 
 

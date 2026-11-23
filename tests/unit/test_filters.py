@@ -8,7 +8,7 @@ from leakwatch.scanner.filters import path_penalty, placeholder_reason
     "your-api-key-here", "changeme", "<your-secret-key>", "xxxxxxxxxxxxxxxx", "${DB_PASSWORD}",
     "{{ token }}", "dummy_token_value_123", "REPLACE_ME_WITH_REAL_SECRET", "placeholder-secret-value",
     "EXAMPLE_KEY_1234567890", "sk-your-key-here", "%(password)s", "null", "aaaaaaaaaaaa",
-    "os.environ['X']", "process.env.API_KEY", "redacted-value-0001",
+    "os.environ['X']", "process.env.API_KEY", "redacted-value-0001", "{fakes.stripe_live()}", "{token}",
 ])
 def test_placeholders_detected(value):
     assert placeholder_reason(value) is not None

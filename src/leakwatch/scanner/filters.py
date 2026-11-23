@@ -6,7 +6,7 @@ import re
 # Structural markers: templating, env lookups, angle-bracket placeholders, masks.
 STRUCTURAL = [
     (re.compile(r"\$\{[^}]*\}|\$\([^)]*\)|^\$[A-Z_][A-Z0-9_]*$"), "env-substitution"),
-    (re.compile(r"\{\{.*?\}\}|\{\{|\}\}|\{%|%\([a-z_]+\)s"), "template"),
+    (re.compile(r"\{\{.*?\}\}|\{\{|\}\}|\{%|%\([a-z_]+\)s|\{[A-Za-z_][\w.()\[\]'\"]*\}"), "template"),
     (re.compile(r"<[^>]{1,60}>"), "angle-placeholder"),
     (re.compile(r"os\.environ|getenv|process\.env|ENV\[|System\.getenv|import\.meta\.env", re.I), "env-lookup"),
     (re.compile(r"x{4,}|\*{4,}|#{4,}|\.{4,}", re.I), "mask-chars"),
