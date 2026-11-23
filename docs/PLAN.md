@@ -7,5 +7,5 @@
 - [x] 4 LLM triage (JSON validated, placeholder → non-real, fallback)
 - [x] 5 Webhook + service (register-webhook, 401, push → issue, survives restart)
 - [x] 6 Live e2e ×3
-- [ ] 7 Docs + manual test + demo
+- [x] 7 Docs + manual test + demo
 - [ ] 8 Final validation + publish

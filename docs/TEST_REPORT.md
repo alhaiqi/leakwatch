@@ -38,3 +38,4 @@ Each run: unique branch `leakwatch-e2e-<ts>` created via the API; commits go thr
 
 - Run 195449 failed because of a racy test oracle (GitHub's list-issues lag, DEBUG_LOG #7), not because of LeakWatch. After the oracle fix, runs **195545, 195636, 195723 and 195751 passed**, and the last three were run back to back as the gate. **3 consecutive passes ✅**
 - Raw results: `data/e2e-results/*.json` (gitignored, local to the Sprite).
+- Leftover from the failed e2e run (#5) plus the gate-seed issues #1–#3 and their 3 branches were closed/deleted at 19:59Z; all were created by this session and labelled `leakwatch-e2e`. The leftover #5 confirmed the oracle bug in DEBUG_LOG #7 and its cleanup half; cleanup now uses the DB and waits 3 s for in-flight work.
