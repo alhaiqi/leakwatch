@@ -1,0 +1,50 @@
+diff --git a/app/config.py b/app/config.py
+index 1111111..2222222 100644
+--- a/app/config.py
++++ b/app/config.py
+@@ -1,4 +1,10 @@
+ import os
+ 
+-DEBUG = True
++DEBUG = False
++AWS_ACCESS_KEY_ID = "{{FAKE_AWS_KEY}}"
++GITHUB_TOKEN = "{{FAKE_GHP}}"
+ REGION = "eu-west-1"
++OPENAI_API_KEY = "{{FAKE_OPENAI}}"
++ANTHROPIC_API_KEY = "{{FAKE_ANTHROPIC}}"
++DATABASE_URL = "{{FAKE_POSTGRES_URL}}"
+ TIMEOUT = 30
+@@ -20,3 +25,5 @@ def connect():
+     pass
++
++SLACK_BOT_TOKEN = "{{FAKE_SLACK}}"
+ # end
+diff --git a/deploy/.env.production b/deploy/.env.production
+new file mode 100644
+index 0000000..3333333
+--- /dev/null
++++ b/deploy/.env.production
+@@ -0,0 +1,9 @@
++STRIPE_SECRET_KEY={{FAKE_STRIPE}}
++STRIPE_RESTRICTED={{FAKE_STRIPE_RK}}
++GOOGLE_MAPS_KEY={{FAKE_GOOGLE}}
++OPENAI_PROJECT_KEY={{FAKE_OPENAI_PROJ}}
++GH_OAUTH={{FAKE_GHO}}
++GH_APP={{FAKE_GHS}}
++GH_FINE={{FAKE_GITHUB_PAT}}
++MYSQL_URL={{FAKE_MYSQL_URL}}
++MONGO_URI={{FAKE_MONGO_URL}}
+diff --git a/keys/deploy_key b/keys/deploy_key
+new file mode 100644
+--- /dev/null
++++ b/keys/deploy_key
+@@ -0,0 +1,2 @@
++{{FAKE_PEM_HEADER}}
++MIIEowIBAAKCAQEA
+diff --git a/src/settings.js b/src/settings.js
+--- a/src/settings.js
++++ b/src/settings.js
+@@ -10,2 +10,3 @@
+ const port = 3000;
++const db_password = "{{FAKE_PASSWORD}}";
+ module.exports = { port };

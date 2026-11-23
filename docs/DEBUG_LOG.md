@@ -14,3 +14,7 @@
 ## #3 — Reasoning models return `content: null` with small `max_tokens` (preflight)
 - `liquid/lfm-3-1.7b:free` with `max_tokens=10`: all tokens went to `message.reasoning`. With 400 it was fine.
 - **Lesson:** triage uses `max_tokens≥800`, and if `content` is null it falls back to parsing JSON out of `reasoning`.
+
+## #4 — Test over-constrained the PEM header (Phase 2)
+- `test_raw_value_never_in_any_output` asserted that every fake value, including `FAKE_PEM_HEADER`, never appears. The header line (`-----BEGIN … PRIVATE KEY-----`) isn't secret: it's identical in every key file, and the issue *should* say what kind of key leaked.
+- Fix: exempt only the header in that test. The key body is still asserted absent by `test_pem_finding_masked_without_body`. This is a corrected test, not a weakened one.

@@ -1,0 +1,87 @@
+{
+ "FAKE_AWS_KEY": [
+  "app/config.py",
+  4,
+  "aws_access_key_id"
+ ],
+ "FAKE_GHP": [
+  "app/config.py",
+  5,
+  "github_token"
+ ],
+ "FAKE_OPENAI": [
+  "app/config.py",
+  7,
+  "openai_api_key"
+ ],
+ "FAKE_ANTHROPIC": [
+  "app/config.py",
+  8,
+  "anthropic_api_key"
+ ],
+ "FAKE_POSTGRES_URL": [
+  "app/config.py",
+  9,
+  "database_url"
+ ],
+ "FAKE_SLACK": [
+  "app/config.py",
+  27,
+  "slack_token"
+ ],
+ "FAKE_STRIPE": [
+  "deploy/.env.production",
+  1,
+  "stripe_secret_key"
+ ],
+ "FAKE_STRIPE_RK": [
+  "deploy/.env.production",
+  2,
+  "stripe_restricted_key"
+ ],
+ "FAKE_GOOGLE": [
+  "deploy/.env.production",
+  3,
+  "google_api_key"
+ ],
+ "FAKE_OPENAI_PROJ": [
+  "deploy/.env.production",
+  4,
+  "openai_api_key"
+ ],
+ "FAKE_GHO": [
+  "deploy/.env.production",
+  5,
+  "github_token"
+ ],
+ "FAKE_GHS": [
+  "deploy/.env.production",
+  6,
+  "github_token"
+ ],
+ "FAKE_GITHUB_PAT": [
+  "deploy/.env.production",
+  7,
+  "github_token"
+ ],
+ "FAKE_MYSQL_URL": [
+  "deploy/.env.production",
+  8,
+  "database_url"
+ ],
+ "FAKE_MONGO_URL": [
+  "deploy/.env.production",
+  9,
+  "database_url"
+ ],
+ "FAKE_PEM_HEADER": [
+  "keys/deploy_key",
+  1,
+  "private_key"
+ ],
+ "FAKE_PASSWORD": [
+  "src/settings.js",
+  11,
+  "generic_secret"
+ ]
+}
