@@ -25,3 +25,9 @@
 - **Fixes:** (1) the parser takes the last decodable object containing `verdict`; (2) the malformed-retry goes to the next model; (3) ernie moved to first place; max_tokens raised to 1500.
 - Also found a design gap: the LLM saw only `sk-y…re` and features claiming "no placeholder markers", so it couldn't judge. Features now include the locally computed `placeholder_marker` and word-segment counts (they don't reveal the value).
 - **Result:** 5/5 live tests pass.
+
+## #6 — Self-scan dirty after the Phase 4 commit (my own mistakes)
+- **Observed:** `leakwatch self-scan` found 2 generic hits, but my gate command chain committed anyway, because `self-scan` wasn't part of the `&&` chain.
+- (a) `spikes/phase3_seed.py`: `STRIPE_SECRET_KEY = "{fakes.stripe_live()}"` inside an f-string. The filter knew `{{…}}` but not single-brace interpolation. Added `{identifier…}` to the template markers (with a regression test).
+- (b) `tests/unit/test_reporter.py`: I had typed a secret-shaped password literal into a test, against the "no secret-shaped literals" rule. Replaced it with `fakes.generic_password()`.
+- **Lesson:** gate commits are now `pytest && self-scan && git commit`. milestone-4-green was re-tagged on the clean commit.
