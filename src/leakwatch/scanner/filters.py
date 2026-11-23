@@ -55,6 +55,7 @@ def path_penalty(path: str) -> float:
 CODE_EXT = {"py", "js", "ts", "tsx", "jsx", "mjs", "cjs", "go", "rb", "java", "kt", "scala", "cs",
             "php", "rs", "swift", "c", "cc", "cpp", "h", "hpp", "m", "dart", "lua", "ex", "exs", "vue"}
 PATHLIKE = re.compile(r"^(~|\.{0,2}/|[A-Za-z]:\\)|^[\w.-]+/[\w./-]+\.\w{1,5}$|^https?://[^:@]+$")
+CALL_OR_INDEX = re.compile(r"[()\[\]]")
 DOTTED_IDENT = re.compile(r"^[A-Za-z_]\w*(\.[A-Za-z_]\w*)+$")
 
 
@@ -64,7 +65,7 @@ def is_code_file(path: str) -> bool:
 
 def generic_value_reason(value: str, quoted: bool, path: str) -> str | None:
     """Shape checks for the generic rule (before entropy)."""
-    if not quoted and is_code_file(path):
+    if not quoted and (is_code_file(path) or CALL_OR_INDEX.search(value)):
         return "code-expression"
     if PATHLIKE.search(value):
         return "path-or-url"

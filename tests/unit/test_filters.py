@@ -29,3 +29,10 @@ def test_path_penalty():
     assert path_penalty("docs/setup.md") < 1.0
     assert path_penalty("src/__tests__/a.ts") < 1.0
     assert path_penalty("config.example.env") < 1.0
+
+
+def test_bare_call_or_index_is_code_in_any_file():
+    from leakwatch.scanner.filters import generic_value_reason
+    for v in ["get_token_from_vault()", "cfg['k']", "vault.read(path)"]:
+        assert generic_value_reason(v, quoted=False, path="notes.diff") == "code-expression"
+    assert generic_value_reason("Zx81kQp0aLmN2", quoted=False, path=".env") is None

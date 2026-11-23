@@ -1,0 +1,33 @@
+# LeakWatch configuration. No secrets live here; credentials are injected by the Sprites gateway.
+
+[watch]
+# Allowlist: LeakWatch only reads/writes these repos.
+repos = ["alhaiqi/leakwatch-playground"]
+
+[thresholds]
+# Report verdict "unsure" only if the rule confidence is at least this.
+report_unsure_min_confidence = 0.8
+# An LLM "placeholder" verdict on a known-format match needs this much LLM confidence,
+# otherwise it is downgraded to "unsure" (ADR-0006).
+llm_placeholder_min_confidence = 0.7
+
+[llm]
+enabled = true
+# Only ids ending in ":free" are ever used (hard guard in llm.py).
+preferred_models = [
+  "nvidia/nemotron-3.5-lightning:free",
+  "inclusionai/ling-3.2-flash:free",
+  "baidu/ernie-5.5-flash-preview:free",
+  "liquid/lfm-3-1.7b:free",
+]
+max_models_to_try = 4
+timeout_seconds = 45
+max_tokens = 900
+
+[issues]
+tone = "security-uncle"   # or "professional"
+labels = ["leakwatch"]
+
+[server]
+port = 8080
+heartbeat_seconds = 30

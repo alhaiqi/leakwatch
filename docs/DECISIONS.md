@@ -25,3 +25,16 @@
 ## ADR-0004 — Free-model fallback order (2026-11-23)
 **Evidence:** `spikes/spike_b_output.txt`: 10 of 12 `:free` models returned valid JSON in 0.5–2.1 s; both Gemma models returned 429.
 **Decision:** At startup fetch `/v1/models` and keep only ids ending in `:free` (hard guard: a non-`:free` id is never sent). Order: preferred list from config (`nvidia/nemotron-3.5-lightning:free`, `inclusionai/ling-3.2-flash:free`, `baidu/ernie-5.5-flash-preview:free`, `liquid/lfm-3-1.7b:free`), then any other free model. On a 429, 5xx or timeout, try the next one; after 4 failed models, use rules-only triage.
+
+## ADR-0005 — Dedupe lives only in SQLite; no fingerprint in issue bodies (2026-11-23)
+**Context:** We could put the fingerprint in each issue as a hidden marker, so dedupe would survive a DB loss.
+**Decision:** No. sha256(repo+file+secret) of a *weak* password can be brute-forced from a public hash. Dedupe uses an atomic `INSERT OR IGNORE` claim in `data/leakwatch.db` (mode 600). The claim is released if issue creation fails.
+**Consequences:** Wiping `data/` means already-reported secrets can be reported again. That's acceptable for a personal tool.
+
+## ADR-0006 — A low-confidence LLM "placeholder" can't suppress a known-format hit (2026-11-23)
+**Context:** Free models can be wrong, and a missed real leak costs more than an extra issue.
+**Decision:** For known-format regex hits, an LLM `placeholder` verdict with confidence < `llm_placeholder_min_confidence` (0.7) becomes `unsure`, and is reported when rule confidence ≥ 0.8. For generic hits the LLM verdict is final.
+
+## ADR-0007 — Orchestration lives in `reporter.py` (2026-11-23)
+**Context:** The prompt fixes the folder layout. `Pipeline.process_commit` (fetch → scan → triage → decide → issue) needs a home.
+**Decision:** `reporter.py`, rather than adding a module outside the layout. Rotation steps: the LLM's steps when it returns 2–8 valid ones, otherwise the curated per-type steps.
