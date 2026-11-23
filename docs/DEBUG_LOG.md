@@ -18,3 +18,10 @@
 ## #4 — Test over-constrained the PEM header (Phase 2)
 - `test_raw_value_never_in_any_output` asserted that every fake value, including `FAKE_PEM_HEADER`, never appears. The header line (`-----BEGIN … PRIVATE KEY-----`) isn't secret: it's identical in every key file, and the issue *should* say what kind of key leaked.
 - Fix: exempt only the header in that test. The key body is still asserted absent by `test_pem_finding_masked_without_body`. This is a corrected test, not a weakened one.
+
+## #5 — Placeholder triage fell back to rules: "invalid JSON" (Phase 4)
+- **Observed:** `test_placeholder_sk_your_key_here_is_not_real` got `source=rules (LLM output invalid)`.
+- **Experiment:** printed the raw output of 3 preferred models for that prompt. `nemotron-3.5-lightning:free` returned a prose "thinking process" with JSON-ish fragments (the parser took the first `{`); `ling-3.2-flash:free` returned 429; `ernie-5.5-flash-preview:free` returned clean JSON (`placeholder`, 0.98).
+- **Fixes:** (1) the parser takes the last decodable object containing `verdict`; (2) the malformed-retry goes to the next model; (3) ernie moved to first place; max_tokens raised to 1500.
+- Also found a design gap: the LLM saw only `sk-y…re` and features claiming "no placeholder markers", so it couldn't judge. Features now include the locally computed `placeholder_marker` and word-segment counts (they don't reveal the value).
+- **Result:** 5/5 live tests pass.

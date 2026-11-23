@@ -4,7 +4,7 @@
 - [x] 1 Research + spikes: gateway GitHub ✅, gateway OpenRouter ✅, public :8080 ✅, supervision (ADR-0003)
 - [x] 2 Scanner (offline, test-first)
 - [x] 3 GitHub integration (scan-commit opens a masked issue, no duplicate)
-- [ ] 4 LLM triage (JSON validated, placeholder → non-real, fallback)
+- [x] 4 LLM triage (JSON validated, placeholder → non-real, fallback)
 - [ ] 5 Webhook + service (register-webhook, 401, push → issue, survives restart)
 - [ ] 6 Live e2e ×3
 - [ ] 7 Docs + manual test + demo

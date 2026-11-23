@@ -74,3 +74,10 @@ def test_llm_output_is_scrubbed():
     leaked = fakes.github_pat()
     t = triage(f, StubLLM([f'{{"verdict":"real","confidence":0.9,"why":"like {leaked}","rotation_steps":["revoke {leaked}"]}}']))
     assert leaked not in t.why + "".join(t.rotation_steps)
+
+
+def test_parse_takes_last_verdict_object_after_thinking():
+    text = ('Thinking: features {"length": 16} look like `{"verdict": "real"` maybe...\n'
+            'Final: {"verdict":"placeholder","confidence":0.9,"why":"has your marker"}')
+    t = parse(text)
+    assert t.verdict == "placeholder" and t.confidence == 0.9

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import os
 import time
 
 import httpx
@@ -25,6 +26,9 @@ class OpenRouter:
         self.last_model: str | None = None
 
     def free_models(self, refresh: bool = False) -> list[str]:
+        forced = os.environ.get("LEAKWATCH_LLM_FORCE_MODELS")  # test hook: e.g. a nonexistent model
+        if forced:
+            return [m.strip() for m in forced.split(",") if m.strip()]
         if self._models is not None and not refresh and time.time() - self._models_at < 3600:
             return self._models
         r = self.gw.request("openrouter", "GET", "/v1/models", retries=1)

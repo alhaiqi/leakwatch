@@ -15,14 +15,14 @@ llm_placeholder_min_confidence = 0.7
 enabled = true
 # Only ids ending in ":free" are ever used (hard guard in llm.py).
 preferred_models = [
-  "nvidia/nemotron-3.5-lightning:free",
-  "inclusionai/ling-3.2-flash:free",
   "baidu/ernie-5.5-flash-preview:free",
+  "inclusionai/ling-3.2-flash:free",
+  "nvidia/nemotron-3.5-lightning:free",
   "liquid/lfm-3-1.7b:free",
 ]
 max_models_to_try = 4
 timeout_seconds = 45
-max_tokens = 900
+max_tokens = 1500
 
 [issues]
 tone = "security-uncle"   # or "professional"

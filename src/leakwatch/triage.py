@@ -12,7 +12,7 @@ from .gateway import GatewayError
 from .llm import LLMUnavailable, OpenRouter
 from .scanner.detector import Finding
 from .scanner.entropy import shannon
-from .scanner.filters import path_penalty
+from .scanner.filters import path_penalty, placeholder_reason
 from .scanner.redact import scrub
 
 log = logging.getLogger("leakwatch.triage")
@@ -52,7 +52,10 @@ def features(f: Finding) -> dict:
         "length": len(v),
         "entropy_bits_per_char": round(shannon(v), 2),
         "has_digits_and_letters": bool(re.search(r"\d", v) and re.search(r"[A-Za-z]", v)),
-        "placeholder_markers_found": "none (rule filters passed)",
+        # Non-revealing shape features computed locally from the raw value:
+        "placeholder_marker": placeholder_reason(v) or "none",
+        "word_like_segments": sum(1 for seg in re.split(r"[-_.:/]", v) if re.fullmatch(r"[a-z]{3,}", seg)),
+        "segment_count": len([seg for seg in re.split(r"[-_.:/]", v) if seg]),
     }
 
 
@@ -64,18 +67,27 @@ def build_messages(f: Finding) -> list[dict]:
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
 
 
+def _last_verdict_object(text: str):
+    """Models sometimes think out loud first: take the LAST decodable JSON object with a verdict."""
+    dec, found, last_err = json.JSONDecoder(), None, "no JSON object"
+    for i, ch in enumerate(text):
+        if ch != "{":
+            continue
+        try:
+            obj, _ = dec.raw_decode(text[i:])
+        except json.JSONDecodeError as e:
+            last_err = f"invalid JSON: {e.msg}"
+            continue
+        if isinstance(obj, dict) and "verdict" in obj:
+            found = obj
+    if found is None:
+        raise TriageParseError(last_err)
+    return found
+
+
 def parse(text: str) -> Triage:
     """Extract and strictly validate the JSON object."""
-    text = re.sub(r"```(?:json)?", "", text)
-    start = text.find("{")
-    if start < 0:
-        raise TriageParseError("no JSON object")
-    try:
-        obj, _ = json.JSONDecoder().raw_decode(text[start:])
-    except json.JSONDecodeError as e:
-        raise TriageParseError(f"invalid JSON: {e.msg}") from e
-    if not isinstance(obj, dict):
-        raise TriageParseError("not an object")
+    obj = _last_verdict_object(re.sub(r"```(?:json)?", "", text))
     verdict = str(obj.get("verdict", "")).strip().lower()
     if verdict not in VERDICTS:
         raise TriageParseError(f"bad verdict {verdict!r}")
@@ -108,7 +120,8 @@ def triage(f: Finding, llm: OpenRouter | None) -> Triage:
             log.info("malformed triage JSON from %s (%s); retrying once", model, e)
             retry = messages + [{"role": "assistant", "content": text[:2000]},
                                 {"role": "user", "content": "That was not valid. Reply with ONLY the JSON object."}]
-            text, model = llm.complete(retry, models=[model] + [m for m in llm.free_models() if m != model])
+            # retry once, on the NEXT model (a chatty model tends to stay chatty), same model last
+            text, model = llm.complete(retry, models=[m for m in llm.free_models() if m != model] + [model])
             t = parse(text)
         t.source = f"llm:{model}"
         return t
