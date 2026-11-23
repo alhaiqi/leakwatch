@@ -8,4 +8,4 @@
 - [x] 5 Webhook + service (register-webhook, 401, push → issue, survives restart)
 - [x] 6 Live e2e ×3
 - [x] 7 Docs + manual test + demo
-- [ ] 8 Final validation + publish
+- [x] 8 Final validation + publish

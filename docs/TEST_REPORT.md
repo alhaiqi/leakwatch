@@ -49,3 +49,23 @@ Each run: unique branch `leakwatch-e2e-<ts>` created via the API; commits go thr
 | 20261123-204748 | ✅ PASS | ✅ 2 issues in 13.3s, lines [4, 5] | ✅ | ✅ dup=1 | ✅ 401 / ignored | #19, #20 |
 
 **3 consecutive passes on final code ✅.** Afterwards: 0 open `leakwatch-e2e` issues; the only branch in the test repo is `main`.
+
+## Phase 8: fresh-clone check (2026-11-23 ~20:55Z)
+`git clone https://github.com/alhaiqi/leakwatch.git /tmp/lw-fresh` (HEAD `517ef63`), then the README steps: `python3 -m venv .venv && .venv/bin/pip install -e '.[dev]'` →
+`pytest`: **148 passed, 5 skipped (live)** · scanner coverage **98%** · `self-scan`: **CLEAN** (66 files) · `leakwatch doctor`: **11/11 green** · 20 reruns: **0 failures**.
+(An earlier fresh-clone run exposed rare flaky tests; the hunt found 3 real false-negative/under-masking bugs, DEBUG_LOG #8 and #10. Afterwards: 0/100 failures in the dev tree.)
+
+## Definition of Done
+
+| Item | Status | Evidence |
+|---|---|---|
+| Runs on the Sprite as a supervised service and survives a sleep/wake cycle | 🟡 **Partially verified** | Service `leakwatch` (`--http-port 8080`) running; crash → auto-restart in under 5 s (Phase 5); `services restart` clean; boot-restart per docs. A real pause/reboot **could not be observed** while this console session was attached (ADR-0008). Heartbeat at 20:56Z: 131 beats since 19:51Z, 0 pauses, 3 process restarts (2 deploys + 1 kill test), 0 reboots. Human step: `scripts/sleepwake_check.sh` (BLOCKED.md) |
+| Uses the GitHub and OpenRouter connectors through the gateway; no tokens anywhere | ✅ | All calls go to `api.sprites.dev/v1/gateway/...` (IDs discovered at runtime); `gateway.py` refuses auth headers; doctor "no tokens in environment" ✅; self-scan CLEAN; `env` has no GITHUB_TOKEN/GH_TOKEN/OPENROUTER_API_KEY |
+| `pytest` (offline) all green; `scanner/` coverage ≥ 90% | ✅ | 148 passed; coverage **98%**; 0/100 flaky reruns |
+| `scripts/e2e.sh` passed 3 consecutive times | ✅ | Phase 6: 3 consecutive (plus 1 more); re-run on final code: 3 consecutive (20:46–20:48Z). Tables above |
+| MANUAL_TEST.md executed, actual results filled | ✅ | 7/7 steps ✅, re-executed on final code at 20:49Z |
+| Self-scan of the LeakWatch repo is clean | ✅ | `self-scan: 66 files, 0 findings -> CLEAN` (HEAD, dev tree and fresh clone). Note: two **made-up** secret-shaped test literals remain in *published history* (DEBUG_LOG #9, #11); not credentials, and removing them would need a force-push |
+| Fresh-clone check | ✅ | See the section above |
+| All docs exist and are current; PROGRESS has the final entry | ✅ | README, CLAUDE.md, docs/{PREFLIGHT, PLAN, PROGRESS, ARCHITECTURE, DECISIONS (8 ADRs), DEBUG_LOG (11 entries), TEST_REPORT, MANUAL_TEST, DEMO_SCRIPT, SUBMISSION}, references/ |
+| Pushed to the public submission repo | ✅ | https://github.com/alhaiqi/leakwatch (full history replayed via the Git Data API through the connector, fast-forward only, milestone tags) |
+| Final message with human steps | ✅ | See BLOCKED.md and the final summary |

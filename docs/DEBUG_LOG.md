@@ -58,5 +58,5 @@
 - Stability after all fixes: **0/100** full-suite failures (148 tests per run); fuzz: 0 strict-filter drops in 2.1M random keys.
 
 ## #11 — Broken gate: `grep CLEAN` matched "NOT CLEAN"
-- My gate chain `self-scan | tail -1 | grep CLEAN` passed on `… -> NOT CLEAN`, so a commit landed with a secret-shaped test literal (`sk-proj-YOUR_key…`, a made-up OpenAI-format string). `publish.py`'s own guard refused to push it, so it never reached the public repo.
+- My gate chain `self-scan | tail -1 | grep CLEAN` passed on `… -> NOT CLEAN`, so a commit landed with a secret-shaped test literal (`sk-proj-YOUR_key…`, a made-up OpenAI-format string). `publish.py`'s guard refused that publish, but the next publish replayed every commit, so the intermediate commit (public `cb6771f`) carries this made-up literal in history, like #9. It's not a credential; `publish.py` only scans HEAD, and removing it from history would need a forbidden force-push.
 - Fix: the literal is built at runtime, and gates now use `leakwatch self-scan` **exit code** (1 when anything is found). The earlier gates (Phases 4–7) printed `CLEAN` in their output, so they weren't affected.

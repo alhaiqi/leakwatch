@@ -9,3 +9,4 @@
 - 19:53Z Phase 5 done: service 'leakwatch' live on :8080, one hook, 401 on bad sig, push→issue in ~12 s, crash-restart proven. Sleep/wake only partially verified (ADR-0008).
 - 19:58Z Phase 6 done: e2e passed 3× consecutively (plus one more pass before; one racy-oracle failure fixed, DEBUG_LOG #7).
 - 20:02Z Phase 7 done: README, ARCHITECTURE, MANUAL_TEST (executed, 7/7 ✅), DEMO_SCRIPT, SUBMISSION, CLAUDE.md, references.
+- 20:56Z **Final.** Phase 8 done: fresh clone from GitHub green (148 tests, 98% coverage, doctor 11/11); e2e 3× on final code; published to https://github.com/alhaiqi/leakwatch. DoD: all ✅ except sleep/wake, which is partially verified (human step in BLOCKED.md). Checkpoint v10 + milestone-8-green.
