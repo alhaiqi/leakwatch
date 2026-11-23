@@ -1,0 +1,10 @@
+data/
+.venv/
+__pycache__/
+*.db
+.env
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+spikes/heartbeat.log

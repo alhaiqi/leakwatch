@@ -1,0 +1,433 @@
+{
+  "available": [
+    {
+      "description": "Allow Sprites to act on your behalf",
+      "provider": "slack",
+      "display_name": "Slack (User)",
+      "default_scopes": [
+        "chat:write",
+        "channels:read",
+        "channels:history",
+        "users:read",
+        "team:read",
+        "search:read"
+      ]
+    },
+    {
+      "description": "Allow Sprites to be Slack Bots",
+      "provider": "slack_bot",
+      "display_name": "Slack (Bot)",
+      "default_scopes": [
+        "chat:write",
+        "channels:read",
+        "channels:history",
+        "users:read",
+        "team:read"
+      ]
+    },
+    {
+      "description": "Repos, issues, pull requests",
+      "provider": "github",
+      "display_name": "GitHub",
+      "default_scopes": [
+        "repo",
+        "read:org"
+      ]
+    },
+    {
+      "description": "Read and post to a Discourse forum",
+      "provider": "discourse",
+      "display_name": "Discourse",
+      "default_scopes": [
+        "read",
+        "write"
+      ]
+    },
+    {
+      "description": "Serverless Postgres projects and branches",
+      "provider": "neon",
+      "display_name": "Neon",
+      "default_scopes": [
+        "urn:neoncloud:projects:read",
+        "urn:neoncloud:projects:create",
+        "urn:neoncloud:projects:update",
+        "urn:neoncloud:orgs:read",
+        "offline",
+        "offline_access"
+      ]
+    },
+    {
+      "description": "Let an agent ask your Link wallet for a one-time virtual card. You approve each purchase in the Link app. Your Sprite pays with the virtual card, so your real card number isn't shared.",
+      "provider": "link",
+      "display_name": "Link",
+      "default_scopes": [
+        "payment_methods.agentic",
+        "userinfo:read"
+      ]
+    },
+    {
+      "description": "Read, download and upload files in your Box account from trusted Sprites.",
+      "provider": "box",
+      "display_name": "Box",
+      "default_scopes": [
+        "root_readwrite"
+      ]
+    },
+    {
+      "description": "Run Apify Actors and tasks and retrieve their datasets",
+      "provider": "apify",
+      "display_name": "Apify",
+      "default_scopes": []
+    },
+    {
+      "description": "Create cloud browser sessions, search the web, and fetch pages",
+      "provider": "browserbase",
+      "display_name": "Browserbase",
+      "default_scopes": []
+    },
+    {
+      "description": "Search and manage vectors, generate embeddings, and rerank results",
+      "provider": "pinecone",
+      "display_name": "Pinecone",
+      "default_scopes": []
+    },
+    {
+      "description": "Start, list, describe, signal, and query Temporal Cloud workflows",
+      "provider": "temporal",
+      "display_name": "Temporal Cloud",
+      "default_scopes": []
+    },
+    {
+      "description": "Email inboxes, messages and drafts for your Sprites",
+      "provider": "agentmail",
+      "display_name": "AgentMail",
+      "default_scopes": []
+    },
+    {
+      "description": "Publish posts to your connected social accounts",
+      "provider": "blotato",
+      "display_name": "Blotato",
+      "default_scopes": []
+    },
+    {
+      "description": "Discover and execute tools for existing Composio accounts",
+      "provider": "composio",
+      "display_name": "Composio Tools",
+      "default_scopes": []
+    },
+    {
+      "description": "Read linked bank accounts and transactions",
+      "provider": "era",
+      "display_name": "Era",
+      "default_scopes": []
+    },
+    {
+      "description": "Web search and page contents for agents",
+      "provider": "kagi",
+      "display_name": "Kagi",
+      "default_scopes": []
+    },
+    {
+      "description": "Search the web and retrieve page contents",
+      "provider": "keenable",
+      "display_name": "Keenable",
+      "default_scopes": []
+    },
+    {
+      "description": "Monitor existing avatar sessions and their usage",
+      "provider": "lemonslice",
+      "display_name": "LemonSlice",
+      "default_scopes": []
+    },
+    {
+      "description": "Inspect agent trust, alignment, and checkpoints",
+      "provider": "mnemom",
+      "display_name": "Mnemom",
+      "default_scopes": []
+    },
+    {
+      "description": "Hosted database tables, views and functions over REST",
+      "provider": "supabase",
+      "display_name": "Supabase Database",
+      "default_scopes": []
+    },
+    {
+      "description": "Query and ingest logs, metrics, traces and profiles (API setup)",
+      "provider": "gigapipe",
+      "display_name": "Gigapipe",
+      "default_scopes": []
+    },
+    {
+      "description": "Team knowledge and memory through Usable MCP",
+      "provider": "usable",
+      "display_name": "Usable",
+      "default_scopes": []
+    },
+    {
+      "description": "Read-only container build and project metadata",
+      "provider": "depot",
+      "display_name": "Depot build insights",
+      "default_scopes": []
+    },
+    {
+      "description": "Inference with intelligent model routing",
+      "provider": "digitalocean",
+      "display_name": "DigitalOcean Inference",
+      "default_scopes": []
+    },
+    {
+      "description": "Redis data commands over HTTP",
+      "provider": "upstash",
+      "display_name": "Upstash Redis",
+      "default_scopes": []
+    },
+    {
+      "description": "Web search and page contents for agents",
+      "provider": "exa",
+      "display_name": "Exa",
+      "default_scopes": []
+    },
+    {
+      "description": "Scrape, search, and map websites",
+      "provider": "firecrawl",
+      "display_name": "Firecrawl",
+      "default_scopes": []
+    },
+    {
+      "description": "Search the web and fetch page contents",
+      "provider": "linkup",
+      "display_name": "Linkup",
+      "default_scopes": []
+    },
+    {
+      "description": "Stateless browser scraping, screenshots, and PDFs",
+      "provider": "steel",
+      "display_name": "Steel Browser Tools",
+      "default_scopes": []
+    },
+    {
+      "description": "OpenAI-compatible inference via Parasail",
+      "provider": "parasail",
+      "display_name": "Parasail",
+      "default_scopes": []
+    },
+    {
+      "description": "OpenAI-compatible inference via Fireworks",
+      "provider": "fireworks",
+      "display_name": "Fireworks",
+      "default_scopes": []
+    },
+    {
+      "description": "Open-model inference and optional Hub repository access",
+      "provider": "huggingface",
+      "display_name": "Hugging Face",
+      "default_scopes": []
+    },
+    {
+      "description": "Prerecorded speech recognition and text-to-speech",
+      "provider": "deepgram",
+      "display_name": "Deepgram",
+      "default_scopes": []
+    },
+    {
+      "description": "Voice agents, conversations and knowledge base",
+      "provider": "elevenlabs",
+      "display_name": "ElevenLabs",
+      "default_scopes": []
+    },
+    {
+      "description": "Short-lived credentials for live voice agents",
+      "provider": "vocalbridge",
+      "display_name": "Vocal Bridge",
+      "default_scopes": []
+    },
+    {
+      "description": "Cloud-hosted open models via Ollama",
+      "provider": "ollama",
+      "display_name": "Ollama",
+      "default_scopes": []
+    },
+    {
+      "description": "Muse Spark models via the Meta Model API",
+      "provider": "meta",
+      "display_name": "Meta",
+      "default_scopes": []
+    },
+    {
+      "description": "GPT models via the OpenAI API",
+      "provider": "openai",
+      "display_name": "OpenAI",
+      "default_scopes": []
+    },
+    {
+      "description": "Typed decisions from Jev, TypeSafeAI's System One model",
+      "provider": "typesafe",
+      "display_name": "TypeSafeAI",
+      "default_scopes": []
+    },
+    {
+      "description": "Claude models via the Anthropic API",
+      "provider": "anthropic",
+      "display_name": "Anthropic",
+      "default_scopes": []
+    },
+    {
+      "description": "Gemini models via the Google Gemini Developer API",
+      "provider": "gemini",
+      "display_name": "Google Gemini",
+      "default_scopes": []
+    },
+    {
+      "description": "Send transactional email",
+      "provider": "resend",
+      "display_name": "Resend",
+      "default_scopes": []
+    },
+    {
+      "description": "Run GPU jobs on Nebius from a Sprite",
+      "provider": "nebius_jobs",
+      "display_name": "Nebius Serverless AI Jobs",
+      "default_scopes": []
+    },
+    {
+      "description": "Connect an S3-compatible bucket",
+      "provider": "s3_object_store",
+      "display_name": "S3-compatible Object Store",
+      "default_scopes": []
+    },
+    {
+      "description": "Persistent agent memory, briefings, and outcomes",
+      "provider": "senselab",
+      "display_name": "SenseLab",
+      "default_scopes": []
+    },
+    {
+      "description": "Access Tigris buckets and objects without exposing your keys",
+      "provider": "tigris",
+      "display_name": "Tigris",
+      "default_scopes": []
+    },
+    {
+      "description": "Connect any API with a token",
+      "provider": "custom_api",
+      "display_name": "Custom API",
+      "default_scopes": []
+    },
+    {
+      "description": "Transcribe recorded audio with AssemblyAI-STT-3.7 and read transcripts, sentences, subtitles and word searches.",
+      "provider": "assemblyai",
+      "display_name": "AssemblyAI",
+      "default_scopes": []
+    },
+    {
+      "description": "Read and search meeting notes, summaries and transcripts from Granola.",
+      "provider": "granola",
+      "display_name": "Granola",
+      "default_scopes": []
+    },
+    {
+      "description": "Query and update Linear issues, projects, cycles and teams over GraphQL",
+      "provider": "linear",
+      "display_name": "Linear",
+      "default_scopes": []
+    },
+    {
+      "description": "Read and write Notion pages, databases, data sources, blocks and comments",
+      "provider": "notion",
+      "display_name": "Notion",
+      "default_scopes": []
+    },
+    {
+      "description": "Serverless chat, text completions and embeddings with Nscale.",
+      "provider": "nscale",
+      "display_name": "Nscale",
+      "default_scopes": []
+    },
+    {
+      "description": "Send push notifications to your phone and desktop",
+      "provider": "pushover",
+      "display_name": "Pushover",
+      "default_scopes": []
+    },
+    {
+      "description": "Investigate Sentry issues, events, releases, monitors and replays",
+      "provider": "sentry",
+      "display_name": "Sentry",
+      "default_scopes": []
+    },
+    {
+      "description": "Read Stripe payments and billing data and manage your product catalog",
+      "provider": "stripe",
+      "display_name": "Stripe",
+      "default_scopes": []
+    },
+    {
+      "description": "Web search, page extraction, site crawling and mapping, and deep research for agents",
+      "provider": "tavily",
+      "display_name": "Tavily",
+      "default_scopes": []
+    },
+    {
+      "description": "Run AI inference with ZeroGPU's open-weight models and specialized small models.",
+      "provider": "zerogpu",
+      "display_name": "ZeroGPU",
+      "default_scopes": []
+    }
+  ],
+  "connections": [
+    {
+      "id": "<github-connection-id>",
+      "description": "Repos, issues, pull requests",
+      "provider": "github",
+      "access_policy": {
+        "name_prefix": "leakwatch"
+      },
+      "inserted_at": "2026-11-23T19:09:37.337565Z",
+      "updated_at": "2026-11-23T19:10:25.757266Z",
+      "connection_type": "oauth",
+      "username": "alhaiqi",
+      "display_name": "alhaiqi",
+      "user_id": "1810459",
+      "provider_info": {
+        "user_avatar": "https://avatars.githubusercontent.com/u/177855944?v=4",
+        "user_id": 177855944,
+        "user_name": "alhaiqi"
+      },
+      "provider_account_name": "alhaiqi",
+      "provider_account_id": "177855944",
+      "scopes": "read:org,repo",
+      "token_expires_at": null,
+      "usage_snippet": "# Get authenticated user info\ncurl \"https://api.sprites.dev/v1/gateway/github/<github-connection-id>/user\"\n\n# List repositories\ncurl \"https://api.sprites.dev/v1/gateway/github/<github-connection-id>/user/repos?sort=updated&per_page=10\"\n\n# Get a specific repo\ncurl \"https://api.sprites.dev/v1/gateway/github/<github-connection-id>/repos/OWNER/REPO\"",
+      "notes": [],
+      "gateway_base_url": "https://api.sprites.dev/v1/gateway/github/<github-connection-id>",
+      "workspace_url": null,
+      "manage_url": "https://sprites.dev/account/mohammed-al-haiqi-79/connectors/<github-connection-id>",
+      "request_scopes_url": "https://sprites.dev/account/mohammed-al-haiqi-79/connect/github?scopes="
+    },
+    {
+      "id": "<openrouter-connection-id>",
+      "description": "Hundreds of LLMs through one API",
+      "provider": "openrouter",
+      "access_policy": {
+        "name_prefix": "leakwatch"
+      },
+      "inserted_at": "2026-11-23T19:19:51.383504Z",
+      "updated_at": "2026-11-23T19:20:54.686668Z",
+      "connection_type": "api_key",
+      "username": null,
+      "display_name": "sk-or-v1-<redacted>",
+      "user_id": null,
+      "provider_info": {},
+      "provider_account_name": "sk-or-v1-<redacted>",
+      "provider_account_id": "<redacted>",
+      "scopes": null,
+      "token_expires_at": null,
+      "usage_snippet": "# Chat completion via OpenRouter\ncurl -X POST \"https://api.sprites.dev/v1/gateway/openrouter/<openrouter-connection-id>/v1/chat/completions\" \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"model\": \"openai/gpt-4o-mini\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello!\"}]}'\n\n# List available models\ncurl \"https://api.sprites.dev/v1/gateway/openrouter/<openrouter-connection-id>/v1/models\"",
+      "notes": [],
+      "gateway_base_url": "https://api.sprites.dev/v1/gateway/openrouter/<openrouter-connection-id>",
+      "workspace_url": null,
+      "manage_url": "https://sprites.dev/account/mohammed-al-haiqi-79/connectors/<openrouter-connection-id>",
+      "request_scopes_url": "https://sprites.dev/account/mohammed-al-haiqi-79/connect/openrouter?scopes="
+    }
+  ]
+}
